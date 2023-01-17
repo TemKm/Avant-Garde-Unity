@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RigidbodyMove : MonoBehaviour
 {
+    public float turnSpeed = 4.0f;
+    private float xRotate = 0.0f;
+
     public float speed = 10f;
     Rigidbody rb;
     Vector3 dir = Vector3.zero;
@@ -11,6 +15,7 @@ public class RigidbodyMove : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        transform.rotation= Quaternion.identity;
     }
 
     public float jumpHeight = 3f;
@@ -56,11 +61,15 @@ public class RigidbodyMove : MonoBehaviour
 
     void InputAndDir()
     {
+        float yRotateSize = Input.GetAxis("Mouse X") + turnSpeed;
+        float yRotate = transform.eulerAngles.y + yRotateSize;
+
+        float xRotateSize = -Input.GetAxis("Mouse Y") * turnSpeed;
+        xRotate = Mathf.Clamp(xRotate + xRotateSize, -45, 80);
+
+        transform.eulerAngles = new Vector3(xRotate, yRotate, 0);
+
         dir.x = Input.GetAxis("Horizontal");
         dir.z = Input.GetAxis("Vertical");
-        if (dir != Vector3.zero)
-        {
-            transform.forward = dir;
-        }
     }
 }
